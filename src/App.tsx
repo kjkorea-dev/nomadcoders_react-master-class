@@ -145,6 +145,7 @@ const reset = css`
   }
   a {
     text-decoration: none;
+    color: inherit;
   }
 `;
 
