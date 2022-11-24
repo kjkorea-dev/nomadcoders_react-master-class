@@ -1,5 +1,6 @@
 import Router from "./routes/Router";
 import { createGlobalStyle, css } from "styled-components";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const reset = css`
   @import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400&display=swap");
@@ -156,6 +157,7 @@ function App() {
     <>
       <GlobalStyle />
       <Router />
+      <ReactQueryDevtools initialIsOpen={true} />
     </>
   );
 }
