@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import {
   Link,
   Route,
@@ -10,6 +9,8 @@ import {
 import styled from "styled-components";
 import Price from "./Price";
 import Chart from "./Chart";
+import { useQuery } from "@tanstack/react-query";
+import { fetchCoinInfo, fetchCoiTickers } from "../api";
 
 const Container = styled.div`
   padding: 0 20px;
@@ -108,7 +109,7 @@ interface InfoData {
   last_data_at: string;
 }
 
-interface PriceData {
+interface TickersData {
   id: string;
   name: string;
   symbol: string;
@@ -143,33 +144,27 @@ interface PriceData {
 }
 
 const Coin = () => {
-  const [loading, setLoading] = useState(true);
   const { coinId } = useParams<RouteParams>();
   const { state } = useLocation<RouteState>();
-  const [info, setInfo] = useState<InfoData>();
-  const [priceInfo, setPriceInfo] = useState<PriceData>();
   const priceMatch = useRouteMatch("/:coinId/price");
   const chartMatch = useRouteMatch("/:coinId/chart");
+  const { isLoading: infoLoading, data: infoData } = useQuery<InfoData>({
+    queryKey: ["info", coinId],
+    queryFn: () => fetchCoinInfo(coinId),
+  });
+  const { isLoading: tickersLoading, data: tickersData } =
+    useQuery<TickersData>({
+      queryKey: ["tickers", coinId],
+      queryFn: () => fetchCoiTickers(coinId),
+    });
 
-  useEffect(() => {
-    (async () => {
-      const infoData = await (
-        await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)
-      ).json();
-      const priceData = await (
-        await fetch(`https://api.coinpaprika.com/v1/tickers/${coinId}`)
-      ).json();
-      setInfo(infoData);
-      setPriceInfo(priceData);
-      setLoading(false);
-    })();
-  }, [coinId]);
+  const loading = infoLoading || tickersLoading;
 
   return (
     <Container>
       <Header>
         <Title>
-          {state?.name ? state.name : loading ? "Loading..." : info?.name}
+          {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
         </Title>
       </Header>
       {loading ? (
@@ -179,26 +174,26 @@ const Coin = () => {
           <Overview>
             <OverviewItem>
               <span>Rank:</span>
-              <span>{info?.rank}</span>
+              <span>{infoData?.rank}</span>
             </OverviewItem>
             <OverviewItem>
               <span>Symbol:</span>
-              <span>{info?.symbol}</span>
+              <span>{infoData?.symbol}</span>
             </OverviewItem>
             <OverviewItem>
               <span>Open Source:</span>
-              <span>{info?.open_source ? "Yes" : "No"}</span>
+              <span>{infoData?.open_source ? "Yes" : "No"}</span>
             </OverviewItem>
           </Overview>
-          <Description>{info?.description}</Description>
+          <Description>{infoData?.description}</Description>
           <Overview>
             <OverviewItem>
               <span>Total Supply:</span>
-              <span>{priceInfo?.total_supply}</span>
+              <span>{tickersData?.total_supply}</span>
             </OverviewItem>
             <OverviewItem>
               <span>Max Supply:</span>
-              <span>{priceInfo?.max_supply}</span>
+              <span>{tickersData?.max_supply}</span>
             </OverviewItem>
           </Overview>
           <Tabs>
