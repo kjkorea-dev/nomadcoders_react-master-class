@@ -15,3 +15,13 @@ export function fetchCoiTickers(coinId: string) {
     response.json()
   );
 }
+
+const OHLCV_URL = "https://ohlcv-api.nomadcoders.workers.dev";
+
+export function fetchCoinHistory(coinId: string) {
+  const endDate = Math.floor(Date.now() / 1000);
+  const startDate = endDate - 86400 * 14;
+  return fetch(
+    `${OHLCV_URL}?coinId=${coinId}&start=${startDate}&end=${endDate}`
+  ).then((response) => response.json());
+}
