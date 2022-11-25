@@ -151,6 +151,7 @@ const Coin = () => {
   const { isLoading: infoLoading, data: infoData } = useQuery<InfoData>({
     queryKey: ["info", coinId],
     queryFn: () => fetchCoinInfo(coinId),
+    refetchInterval: 5000,
   });
   const { isLoading: tickersLoading, data: tickersData } =
     useQuery<TickersData>({
@@ -181,8 +182,8 @@ const Coin = () => {
               <span>{infoData?.symbol}</span>
             </OverviewItem>
             <OverviewItem>
-              <span>Open Source:</span>
-              <span>{infoData?.open_source ? "Yes" : "No"}</span>
+              <span>Price:</span>
+              <span>${tickersData?.quotes.USD.price.toFixed(4)}</span>
             </OverviewItem>
           </Overview>
           <Description>{infoData?.description}</Description>
