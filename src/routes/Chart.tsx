@@ -21,7 +21,7 @@ const Chart = ({ coinId }: ChartProps) => {
   const { isLoading, data } = useQuery<IHistorical[]>({
     queryKey: ["chart", coinId],
     queryFn: () => fetchCoinHistory(coinId),
-    refetchInterval: 10000,
+    // refetchInterval: 10000,
   });
 
   return (

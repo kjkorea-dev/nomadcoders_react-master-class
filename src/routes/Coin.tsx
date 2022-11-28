@@ -10,6 +10,7 @@ import styled from "styled-components";
 import Price from "./Price";
 import Chart from "./Chart";
 import { useQuery } from "@tanstack/react-query";
+import { Helmet } from "react-helmet";
 import { fetchCoinInfo, fetchCoiTickers } from "../api";
 
 const Container = styled.div`
@@ -151,7 +152,7 @@ const Coin = () => {
   const { isLoading: infoLoading, data: infoData } = useQuery<InfoData>({
     queryKey: ["info", coinId],
     queryFn: () => fetchCoinInfo(coinId),
-    refetchInterval: 5000,
+    // refetchInterval: 5000,
   });
   const { isLoading: tickersLoading, data: tickersData } =
     useQuery<TickersData>({
@@ -163,6 +164,11 @@ const Coin = () => {
 
   return (
     <Container>
+      <Helmet>
+        <title>
+          {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
+        </title>
+      </Helmet>
       <Header>
         <Title>
           {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
