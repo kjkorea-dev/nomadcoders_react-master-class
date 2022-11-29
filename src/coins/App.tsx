@@ -1,7 +1,12 @@
-import { createGlobalStyle, css } from "styled-components";
-import { ThemeProvider } from "styled-components";
-import { darkTheme } from "./theme";
-import React from "react";
+import Router from "./routes/Router";
+import { createGlobalStyle, css, ThemeProvider } from "styled-components";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { darkTheme, lightTheme } from "../theme";
+import { useRecoilValue } from "recoil";
+import { isDarkAtom } from "./atoms";
+
+const queryClient = new QueryClient();
 
 const reset = css`
   @import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400&display=swap");
@@ -153,14 +158,19 @@ const reset = css`
 
 const GlobalStyle = createGlobalStyle`${reset}`;
 
-const App = () => {
+function App() {
+  const isDark = useRecoilValue(isDarkAtom);
   return (
     <>
-      <ThemeProvider theme={darkTheme}>
-        <GlobalStyle />
-        Hello
-      </ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
+          <GlobalStyle />
+          <Router />
+          <ReactQueryDevtools initialIsOpen={true} />
+        </ThemeProvider>
+      </QueryClientProvider>
     </>
   );
-};
+}
+
 export default App;
