@@ -1,6 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchCoinHistory } from "../api";
 import ApexChart from "react-apexcharts";
+import { useRecoilValue } from "recoil";
+import { isDarkAtom } from "../atoms";
 
 interface ChartProps {
   coinId: string;
@@ -18,6 +20,7 @@ interface IHistorical {
 }
 
 const Chart = ({ coinId }: ChartProps) => {
+  const isDark = useRecoilValue(isDarkAtom);
   const { isLoading, data } = useQuery<IHistorical[]>({
     queryKey: ["chart", coinId],
     queryFn: () => fetchCoinHistory(coinId),
@@ -38,7 +41,7 @@ const Chart = ({ coinId }: ChartProps) => {
             },
           ]}
           options={{
-            theme: { mode: false ? "dark" : "light" },
+            theme: { mode: isDark ? "dark" : "light" },
             chart: {
               width: 500,
               toolbar: { show: false },
