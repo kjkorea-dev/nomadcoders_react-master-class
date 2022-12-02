@@ -1,5 +1,8 @@
+import React from "react";
 import { ThemeProvider, createGlobalStyle, css } from "styled-components";
 import { darkTheme } from "./theme";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { hourSelector, minuteState } from "./atoms";
 
 const reset = css`
   @import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400&display=swap");
@@ -152,11 +155,22 @@ const reset = css`
 const GlobalStyle = createGlobalStyle`${reset}`;
 
 const App = () => {
+  const [minutes, setMinutes] = useRecoilState(minuteState);
+  const hours = useRecoilValue(hourSelector);
+  const onMinutesChange = (event: React.FormEvent<HTMLInputElement>) => {
+    setMinutes(+event.currentTarget.value);
+  };
   return (
     <>
       <ThemeProvider theme={darkTheme}>
         <GlobalStyle />
-        <h1>Trello Clone</h1>
+        <input
+          value={minutes}
+          onChange={onMinutesChange}
+          type="text"
+          placeholder="Minutes"
+        />
+        <input value={hours} type="text" placeholder="Hours" />
       </ThemeProvider>
     </>
   );
