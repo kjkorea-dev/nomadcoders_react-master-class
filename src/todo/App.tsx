@@ -1,5 +1,8 @@
-import { ThemeProvider, createGlobalStyle, css } from "styled-components";
+import { createGlobalStyle, css } from "styled-components";
+import { ThemeProvider } from "styled-components";
 import { darkTheme } from "./theme";
+import React from "react";
+import ToDoList from "./components/ToDoList";
 
 const reset = css`
   @import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400&display=swap");
@@ -156,10 +159,9 @@ const App = () => {
     <>
       <ThemeProvider theme={darkTheme}>
         <GlobalStyle />
-        <h1>Trello Clone</h1>
+        <ToDoList />
       </ThemeProvider>
     </>
   );
 };
-
 export default App;
