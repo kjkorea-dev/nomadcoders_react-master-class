@@ -1,6 +1,6 @@
 import React from "react";
 import { ThemeProvider, createGlobalStyle, css } from "styled-components";
-import { darkTheme } from "../theme";
+import { darkTheme } from "./theme";
 import { useRecoilState } from "recoil";
 import { hourSelector, minuteState } from "./atoms";
 

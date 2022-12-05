@@ -1,6 +1,10 @@
 import React from "react";
-import { ThemeProvider, createGlobalStyle, css } from "styled-components";
-import { darkTheme } from "./theme";
+import styled, {
+  ThemeProvider,
+  createGlobalStyle,
+  css,
+} from "styled-components";
+import { theme } from "./theme";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 
 const reset = css`
@@ -143,7 +147,7 @@ const reset = css`
   body {
     font-family: "Source Sans Pro", sans-serif;
     background-color: ${(props) => props.theme.bgColor};
-    color: ${(props) => props.theme.textColor};
+    color: black;
   }
   a {
     text-decoration: none;
@@ -153,40 +157,69 @@ const reset = css`
 
 const GlobalStyle = createGlobalStyle`${reset}`;
 
+const Wrapper = styled.div`
+  display: flex;
+  max-width: 480px;
+  width: 100%;
+  margin: 0 auto;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+`;
+
+const Boards = styled.div`
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(1, 1fr);
+`;
+
+const Board = styled.div`
+  background-color: ${(props) => props.theme.boardColor};
+  padding: 20px;
+  border-radius: 5px;
+  min-height: 200px;
+`;
+
+const Card = styled.div`
+  background-color: ${(props) => props.theme.cardColor};
+  padding: 10px;
+  border-radius: 5px;
+  margin: 10px 0;
+`;
+
+const toDos = ["a", "b", "c", "d", "e", "f", "g"];
+
 const App = () => {
   const onDragEnd = () => {};
   return (
     <>
-      <ThemeProvider theme={darkTheme}>
+      <ThemeProvider theme={theme}>
         <GlobalStyle />
         <DragDropContext onDragEnd={onDragEnd}>
-          <div>
-            <Droppable droppableId="one">
-              {(provided) => (
-                <ul ref={provided.innerRef} {...provided.droppableProps}>
-                  <Draggable draggableId="first" index={0}>
-                    {(provided) => (
-                      <li ref={provided.innerRef} {...provided.draggableProps}>
-                        <span {...provided.dragHandleProps}>🦕</span>
-                        First
-                      </li>
-                    )}
-                  </Draggable>
-                  <Draggable draggableId="second" index={1}>
-                    {(provided) => (
-                      <li
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                      >
-                        Second
-                      </li>
-                    )}
-                  </Draggable>
-                </ul>
-              )}
-            </Droppable>
-          </div>
+          <Wrapper>
+            <Boards>
+              <Droppable droppableId="one">
+                {(provided) => (
+                  <Board ref={provided.innerRef} {...provided.droppableProps}>
+                    {toDos.map((toDo, index) => (
+                      <Draggable draggableId={toDo} index={index} key={index}>
+                        {(provided) => (
+                          <Card
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                          >
+                            {toDo}
+                          </Card>
+                        )}
+                      </Draggable>
+                    ))}
+                    {provided.placeholder}
+                  </Board>
+                )}
+              </Droppable>
+            </Boards>
+          </Wrapper>
         </DragDropContext>
       </ThemeProvider>
     </>
