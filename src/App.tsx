@@ -1,6 +1,7 @@
 import React from "react";
 import { ThemeProvider, createGlobalStyle, css } from "styled-components";
 import { darkTheme } from "./theme";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 
 const reset = css`
   @import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400&display=swap");
@@ -153,11 +154,40 @@ const reset = css`
 const GlobalStyle = createGlobalStyle`${reset}`;
 
 const App = () => {
+  const onDragEnd = () => {};
   return (
     <>
       <ThemeProvider theme={darkTheme}>
         <GlobalStyle />
-        <h1>Hello</h1>
+        <DragDropContext onDragEnd={onDragEnd}>
+          <div>
+            <Droppable droppableId="one">
+              {(provided) => (
+                <ul ref={provided.innerRef} {...provided.droppableProps}>
+                  <Draggable draggableId="first" index={0}>
+                    {(provided) => (
+                      <li ref={provided.innerRef} {...provided.draggableProps}>
+                        <span {...provided.dragHandleProps}>🦕</span>
+                        First
+                      </li>
+                    )}
+                  </Draggable>
+                  <Draggable draggableId="second" index={1}>
+                    {(provided) => (
+                      <li
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                      >
+                        Second
+                      </li>
+                    )}
+                  </Draggable>
+                </ul>
+              )}
+            </Droppable>
+          </div>
+        </DragDropContext>
       </ThemeProvider>
     </>
   );
