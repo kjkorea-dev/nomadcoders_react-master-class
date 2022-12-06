@@ -5,7 +5,14 @@ import styled, {
   css,
 } from "styled-components";
 import { theme } from "./theme";
-import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import {
+  DragDropContext,
+  Draggable,
+  Droppable,
+  DropResult,
+} from "react-beautiful-dnd";
+import { useRecoilState } from "recoil";
+import { toDoState } from "./atoms";
 
 const reset = css`
   @import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400&display=swap");
@@ -175,7 +182,7 @@ const Boards = styled.div`
 
 const Board = styled.div`
   background-color: ${(props) => props.theme.boardColor};
-  padding: 20px;
+  padding: 20px 20px 30px;
   border-radius: 5px;
   min-height: 200px;
 `;
@@ -184,13 +191,28 @@ const Card = styled.div`
   background-color: ${(props) => props.theme.cardColor};
   padding: 10px;
   border-radius: 5px;
-  margin: 10px 0;
+  margin: 10px 0 0;
 `;
 
-const toDos = ["a", "b", "c", "d", "e", "f", "g"];
-
 const App = () => {
-  const onDragEnd = () => {};
+  const [toDos, setToDos] = useRecoilState(toDoState);
+  const onDragEnd = ({ source, destination }: DropResult) => {
+    if (!destination) return;
+    setToDos((oldToDos) => {
+      const toDosCopy = [...oldToDos];
+      // 1) Delete item on source.index
+      console.log("Delete item on", source.index);
+      console.log("list", toDosCopy);
+      const [item] = toDosCopy.splice(source.index, 1);
+      console.log("Deleted item", item);
+      console.log("list", toDosCopy);
+      // 2) Put back the item on the destination.index
+      toDosCopy.splice(destination?.index, 0, item);
+      console.log("Put back", item, "on ", destination.index);
+      console.log("list", toDosCopy);
+      return toDosCopy;
+    });
+  };
   return (
     <>
       <ThemeProvider theme={theme}>
@@ -202,7 +224,7 @@ const App = () => {
                 {(provided) => (
                   <Board ref={provided.innerRef} {...provided.droppableProps}>
                     {toDos.map((toDo, index) => (
-                      <Draggable draggableId={toDo} index={index} key={index}>
+                      <Draggable index={index} draggableId={toDo} key={toDo}>
                         {(provided) => (
                           <Card
                             ref={provided.innerRef}
