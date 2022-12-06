@@ -5,13 +5,14 @@ import styled, {
   css,
 } from "styled-components";
 import { theme } from "./theme";
-import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
+import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import { useRecoilState } from "recoil";
 import { toDoState } from "./atoms";
-import Card from "./components/Card";
+import Board from "./components/Board";
 
 const reset = css`
   @import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400&display=swap");
+
   html,
   body,
   div,
@@ -102,7 +103,9 @@ const reset = css`
     font: inherit;
     vertical-align: baseline;
   }
+
   /* HTML5 display-role reset for older browsers */
+
   article,
   aside,
   details,
@@ -117,22 +120,28 @@ const reset = css`
   section {
     display: block;
   }
+
   /* HTML5 hidden-attribute fix for newer browsers */
+
   *[hidden] {
     display: none;
   }
+
   body {
     line-height: 1;
   }
+
   menu,
   ol,
   ul {
     list-style: none;
   }
+
   blockquote,
   q {
     quotes: none;
   }
+
   blockquote:before,
   blockquote:after,
   q:before,
@@ -140,18 +149,22 @@ const reset = css`
     content: "";
     content: none;
   }
+
   table {
     border-collapse: collapse;
     border-spacing: 0;
   }
+
   * {
     box-sizing: border-box;
   }
+
   body {
     font-family: "Source Sans Pro", sans-serif;
     background-color: ${(props) => props.theme.bgColor};
     color: black;
   }
+
   a {
     text-decoration: none;
     color: inherit;
@@ -162,8 +175,7 @@ const GlobalStyle = createGlobalStyle`${reset}`;
 
 const Wrapper = styled.div`
   display: flex;
-  max-width: 480px;
-  width: 100%;
+  width: 100vw;
   margin: 0 auto;
   justify-content: center;
   align-items: center;
@@ -171,23 +183,18 @@ const Wrapper = styled.div`
 `;
 
 const Boards = styled.div`
-  display: grid;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
   width: 100%;
-  grid-template-columns: repeat(1, 1fr);
-`;
-
-const Board = styled.div`
-  background-color: ${(props) => props.theme.boardColor};
-  padding: 20px 20px 30px;
-  border-radius: 5px;
-  min-height: 200px;
+  gap: 10px;
 `;
 
 const App = () => {
   const [toDos, setToDos] = useRecoilState(toDoState);
   const onDragEnd = ({ source, destination }: DropResult) => {
     if (!destination) return;
-    setToDos((oldToDos) => {
+    /* setToDos((oldToDos) => {
       const toDosCopy = [...oldToDos];
       // 1) Delete item on source.index
       // console.log("Delete item on", source.index);
@@ -200,7 +207,7 @@ const App = () => {
       // console.log("Put back", item, "on ", destination.index);
       // console.log("list", toDosCopy);
       return toDosCopy;
-    });
+    }); */
   };
   return (
     <>
@@ -209,16 +216,9 @@ const App = () => {
         <DragDropContext onDragEnd={onDragEnd}>
           <Wrapper>
             <Boards>
-              <Droppable droppableId="one">
-                {(provided) => (
-                  <Board ref={provided.innerRef} {...provided.droppableProps}>
-                    {toDos.map((toDo, index) => (
-                      <Card key={toDo} index={index} toDo={toDo} />
-                    ))}
-                    {provided.placeholder}
-                  </Board>
-                )}
-              </Droppable>
+              {Object.keys(toDos).map((boardId) => (
+                <Board toDos={toDos[boardId]} boardId={boardId} />
+              ))}
             </Boards>
           </Wrapper>
         </DragDropContext>
