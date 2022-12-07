@@ -9,6 +9,13 @@ const Wrapper = styled.div`
   padding: 10px 10px 20px;
   border-radius: 5px;
   min-height: 300px;
+  display: flex;
+  flex-direction: column;
+`;
+
+const Area = styled.div<{ isDraggingOver: boolean }>`
+  background-color: ${(props) => (props.isDraggingOver ? "pink" : "blue")};
+  flex-grow: 1;
 `;
 
 const Title = styled.h2`
@@ -28,13 +35,17 @@ const Board = ({ toDos, boardId }: BoardProps) => {
     <Wrapper>
       <Title>{boardId}</Title>
       <Droppable droppableId={boardId}>
-        {(provided) => (
-          <div ref={provided.innerRef} {...provided.droppableProps}>
+        {(provided, snapshot) => (
+          <Area
+            isDraggingOver={snapshot.isDraggingOver}
+            ref={provided.innerRef}
+            {...provided.droppableProps}
+          >
             {toDos.map((toDo, index) => (
               <Card key={toDo} index={index} toDo={toDo} />
             ))}
             {provided.placeholder}
-          </div>
+          </Area>
         )}
       </Droppable>
     </Wrapper>
