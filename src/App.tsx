@@ -192,22 +192,20 @@ const Boards = styled.div`
 
 const App = () => {
   const [toDos, setToDos] = useRecoilState(toDoState);
-  const onDragEnd = ({ source, destination }: DropResult) => {
-    if (!destination) return;
-    /* setToDos((oldToDos) => {
-      const toDosCopy = [...oldToDos];
-      // 1) Delete item on source.index
-      // console.log("Delete item on", source.index);
-      // console.log("list", toDosCopy);
-      const [item] = toDosCopy.splice(source.index, 1);
-      // console.log("Deleted item", item);
-      // console.log("list", toDosCopy);
-      // 2) Put back the item on the destination.index
-      toDosCopy.splice(destination?.index, 0, item);
-      // console.log("Put back", item, "on ", destination.index);
-      // console.log("list", toDosCopy);
-      return toDosCopy;
-    }); */
+  const onDragEnd = ({ source, destination, draggableId }: DropResult) => {
+    console.log(source, destination);
+    if (source.droppableId === destination?.droppableId) {
+      setToDos((oldBoards) => {
+        const boardCopy = [...oldBoards[source.droppableId]];
+        console.log(boardCopy);
+        const [item] = boardCopy.splice(source.index, 1);
+        boardCopy.splice(destination?.index as number, 0, item);
+        return {
+          ...oldBoards,
+          [source.droppableId]: boardCopy,
+        };
+      });
+    }
   };
   return (
     <>
