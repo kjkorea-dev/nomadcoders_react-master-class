@@ -13,8 +13,14 @@ const Wrapper = styled.div`
   flex-direction: column;
 `;
 
-const Area = styled.div<{ isDraggingOver: boolean }>`
-  background-color: ${(props) => (props.isDraggingOver ? "pink" : "blue")};
+interface AreaProps {
+  isDraggingOver: boolean;
+  draggingFromThis: boolean;
+}
+
+const Area = styled.div<AreaProps>`
+  background-color: ${(props) =>
+    props.isDraggingOver ? "pink" : props.draggingFromThis ? "red" : "blue"};
   flex-grow: 1;
 `;
 
@@ -38,6 +44,7 @@ const Board = ({ toDos, boardId }: BoardProps) => {
         {(provided, snapshot) => (
           <Area
             isDraggingOver={snapshot.isDraggingOver}
+            draggingFromThis={Boolean(snapshot.draggingFromThisWith)}
             ref={provided.innerRef}
             {...provided.droppableProps}
           >
