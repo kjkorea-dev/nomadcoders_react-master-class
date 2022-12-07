@@ -6,7 +6,6 @@ import styled from "styled-components";
 const Wrapper = styled.div`
   width: 300px;
   background-color: ${(props) => props.theme.boardColor};
-  padding: 10px 10px 20px;
   border-radius: 5px;
   min-height: 300px;
   display: flex;
@@ -20,8 +19,13 @@ interface AreaProps {
 
 const Area = styled.div<AreaProps>`
   background-color: ${(props) =>
-    props.isDraggingOver ? "pink" : props.draggingFromThis ? "red" : "blue"};
+    props.isDraggingOver
+      ? "#b2bec3"
+      : props.draggingFromThis
+      ? "#dfe6e9"
+      : "transparent"};
   flex-grow: 1;
+  padding: 10px 15px 20px;
 `;
 
 const Title = styled.h2`
