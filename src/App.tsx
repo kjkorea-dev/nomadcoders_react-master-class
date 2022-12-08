@@ -1,5 +1,9 @@
 import React from "react";
-import { createGlobalStyle, css, ThemeProvider } from "styled-components";
+import styled, {
+  createGlobalStyle,
+  css,
+  ThemeProvider,
+} from "styled-components";
 import { theme } from "./theme";
 
 const reset = css`
@@ -140,9 +144,11 @@ const reset = css`
     box-sizing: border-box;
   }
   body {
+    font-weight: 300;
     font-family: "Source Sans Pro", sans-serif;
-    background-color: ${(props) => props.theme.bgColor};
-    color: ${(props) => props.theme.textColor};
+    color: black;
+    line-height: 1.2;
+    background: linear-gradient(135deg, #e09, #d0e);
   }
   a {
     text-decoration: none;
@@ -152,11 +158,29 @@ const reset = css`
 
 const GlobalStyle = createGlobalStyle`${reset}`;
 
+const Wrapper = styled.div`
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Box = styled.div`
+  width: 200px;
+  height: 200px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.06);
+`;
+
 const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />
-      <div>Hello</div>
+      <Wrapper>
+        <Box />
+      </Wrapper>
     </ThemeProvider>
   );
 };
