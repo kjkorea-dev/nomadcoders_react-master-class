@@ -4,6 +4,8 @@ import styled, {
   css,
   ThemeProvider,
 } from "styled-components";
+import { motion } from "framer-motion";
+
 import { theme } from "./theme";
 
 const reset = css`
@@ -180,6 +182,7 @@ const App = () => {
       <GlobalStyle />
       <Wrapper>
         <Box />
+        <motion.div></motion.div>
       </Wrapper>
     </ThemeProvider>
   );
