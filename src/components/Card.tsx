@@ -13,14 +13,15 @@ const Wrapper = styled.div<{ isDragging: boolean }>`
 `;
 
 interface DraggableCardProps {
-  toDo: string;
+  toDoId: number;
+  toDoText: string;
   index: number;
 }
 
-const Card = ({ toDo, index }: DraggableCardProps) => {
-  console.log(toDo, "has been rendered");
+const Card = ({ toDoId, toDoText, index }: DraggableCardProps) => {
+  console.log(toDoId, "has been rendered");
   return (
-    <Draggable index={index} draggableId={toDo} key={toDo}>
+    <Draggable index={index} draggableId={toDoId + ""}>
       {(provided, snapshot) => (
         <Wrapper
           isDragging={snapshot.isDragging}
@@ -28,7 +29,7 @@ const Card = ({ toDo, index }: DraggableCardProps) => {
           {...provided.draggableProps}
           {...provided.dragHandleProps}
         >
-          {toDo}
+          {toDoText}
         </Wrapper>
       )}
     </Draggable>
