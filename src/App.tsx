@@ -1,10 +1,10 @@
-import React, { useRef } from "react";
+import React, { useEffect } from "react";
 import styled, {
   createGlobalStyle,
   css,
   ThemeProvider,
 } from "styled-components";
-import { motion } from "framer-motion";
+import { motion, useMotionValue } from "framer-motion";
 
 import { theme } from "./theme";
 
@@ -168,16 +168,6 @@ const Wrapper = styled.div`
   align-items: center;
 `;
 
-const BiggerBox = styled(motion.div)`
-  width: 600px;
-  height: 600px;
-  background-color: rgba(255, 255, 255, 0.3);
-  border-radius: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
 const Box = styled(motion.div)`
   width: 200px;
   height: 200px;
@@ -186,28 +176,16 @@ const Box = styled(motion.div)`
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.06);
 `;
 
-const boxVariants = {
-  hover: { rotateZ: 90 },
-  click: { borderRadius: "100px" },
-};
-
 const App = () => {
-  const biggerBoxRef = useRef(null);
+  const x = useMotionValue(0);
+  useEffect(() => {
+    x.onChange(() => console.log(x.get()));
+  }, [x]);
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />
       <Wrapper>
-        <BiggerBox ref={biggerBoxRef}>
-          <Box
-            drag
-            dragSnapToOrigin
-            dragElastic={0}
-            dragConstraints={biggerBoxRef}
-            variants={boxVariants}
-            whileHover="hover"
-            whileTap="click"
-          />
-        </BiggerBox>
+        <Box style={{ x }} drag="x" dragSnapToOrigin />
       </Wrapper>
     </ThemeProvider>
   );
