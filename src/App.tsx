@@ -4,7 +4,7 @@ import styled, {
   css,
   ThemeProvider,
 } from "styled-components";
-import { motion, useMotionValue } from "framer-motion";
+import { motion, useMotionValue, useScroll, useTransform } from "framer-motion";
 
 import { theme } from "./theme";
 
@@ -160,12 +160,13 @@ const reset = css`
 
 const GlobalStyle = createGlobalStyle`${reset}`;
 
-const Wrapper = styled.div`
+const Wrapper = styled(motion.div)`
   width: 100vw;
-  height: 100vh;
+  height: 200vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  background: linear-gradient(135deg, rgb(238, 0, 153), rgb(221, 0, 238));
 `;
 
 const Box = styled(motion.div)`
@@ -178,14 +179,29 @@ const Box = styled(motion.div)`
 
 const App = () => {
   const x = useMotionValue(0);
+  const scaleX = useTransform(x, [-800, 0, 800], [2, 1, 0]);
+  const rotateZ = useTransform(x, [-800, 800], [-360, 360]);
+  const gradient = useTransform(
+    x,
+    [-800, 0, 800],
+    [
+      "linear-gradient(135deg, rgb(0, 210, 238), rgb(0, 83, 238))",
+      "linear-gradient(135deg, rgb(238, 0, 153), rgb(221, 0, 238))",
+      "linear-gradient(135deg, rgb(0, 238, 155), rgb(238, 178, 0))",
+    ]
+  );
+  const { scrollY, scrollYProgress } = useScroll();
+  const scaleY = useTransform(scrollYProgress, [0, 1], [1, 3]);
   useEffect(() => {
-    x.onChange(() => console.log(x.get()));
-  }, [x]);
+    scrollY.onChange(() => {
+      console.log(scrollY.get(), scrollYProgress.get());
+    });
+  }, [scrollY, scrollYProgress]);
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />
-      <Wrapper>
-        <Box style={{ x }} drag="x" dragSnapToOrigin />
+      <Wrapper style={{ background: gradient }}>
+        <Box style={{ x, scale: scaleY, rotateZ }} drag="x" dragSnapToOrigin />
       </Wrapper>
     </ThemeProvider>
   );
