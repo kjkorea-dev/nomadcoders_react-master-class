@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styled, {
   createGlobalStyle,
   css,
   ThemeProvider,
 } from "styled-components";
-import { motion, useMotionValue, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 
 import { theme } from "./theme";
 
@@ -180,7 +180,10 @@ const svg = {
   end: {
     pathLength: 1,
     fill: "rgba(255, 255, 255, 1)",
-    transition: { duration: 5 },
+    transition: {
+      default: { duration: 5 },
+      fill: { duration: 1, delay: 5 },
+    },
   },
 };
 
