@@ -184,12 +184,15 @@ const Box = styled(motion.div)`
 `;
 
 const boxVariants = {
-  invisible: {
-    x: 500,
+  entry: (back: boolean) => ({
+    x: back ? -500 : 500,
     opacity: 0,
     scale: 0,
-  },
-  visible: {
+    transition: {
+      duration: 1,
+    },
+  }),
+  center: {
     x: 0,
     opacity: 1,
     scale: 1,
@@ -197,39 +200,45 @@ const boxVariants = {
       duration: 1,
     },
   },
-  exit: {
-    x: -500,
+  exit: (back: boolean) => ({
+    x: back ? 500 : -500,
     opacity: 0,
     scale: 0,
     transition: {
       duration: 1,
     },
-  },
+  }),
 };
 
 const App = () => {
   const [visible, setVisible] = useState(1);
-  const nextBox = () => setVisible((prev) => (prev >= 10 ? 10 : prev + 1));
+  const [back, setBack] = useState(false);
+  const nextBox = () => {
+    setBack(false);
+    setVisible((prev) => (prev === 10 ? 10 : prev + 1));
+  };
+  const prevBox = () => {
+    setBack(true);
+    setVisible((prev) => (prev === 1 ? 1 : prev - 1));
+  };
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />
       <Wrapper>
-        <AnimatePresence>
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) =>
-            i === visible ? (
-              <Box
-                variants={boxVariants}
-                initial="invisible"
-                animate="visible"
-                exit="exit"
-                key={i}
-              >
-                {i}
-              </Box>
-            ) : null
-          )}
+        <AnimatePresence custom={back}>
+          <Box
+            custom={back}
+            variants={boxVariants}
+            initial="entry"
+            animate="center"
+            exit="exit"
+            key={visible}
+          >
+            {visible}
+          </Box>
         </AnimatePresence>
         <button onClick={nextBox}>next</button>
+        <button onClick={prevBox}>prev</button>
       </Wrapper>
     </ThemeProvider>
   );
