@@ -164,13 +164,14 @@ const Wrapper = styled(motion.div)`
   width: 100vw;
   height: 100vh;
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
-  flex-direction: column;
 `;
 
 const Box = styled(motion.div)`
   display: flex;
+  justify-content: center;
+  align-items: center;
   width: 400px;
   height: 400px;
   border-radius: 50px;
@@ -192,13 +193,15 @@ const App = () => {
     <ThemeProvider theme={theme}>
       <GlobalStyle />
       <Wrapper onClick={toggleClicked}>
-        <Box
-          style={{
-            justifyContent: clicked ? "center" : "flex-start",
-            alignItems: clicked ? "center" : "flex-start",
-          }}
-        >
-          <Circle layout />
+        <Box>
+          {!clicked ? (
+            <Circle layoutId="circle" style={{ borderRadius: 50 }} />
+          ) : null}
+        </Box>
+        <Box>
+          {clicked ? (
+            <Circle layoutId="circle" style={{ borderRadius: 0, scale: 2 }} />
+          ) : null}
         </Box>
       </Wrapper>
     </ThemeProvider>
