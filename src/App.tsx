@@ -170,75 +170,36 @@ const Wrapper = styled(motion.div)`
 `;
 
 const Box = styled(motion.div)`
-  position: absolute;
-  top: 100px;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 28px;
   width: 400px;
-  height: 200px;
+  height: 400px;
+  border-radius: 50px;
   background-color: rgba(255, 255, 255, 1);
-  border-radius: 40px;
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.06);
 `;
 
-const boxVariants = {
-  entry: (back: boolean) => ({
-    x: back ? -500 : 500,
-    opacity: 0,
-    scale: 0,
-    transition: {
-      duration: 1,
-    },
-  }),
-  center: {
-    x: 0,
-    opacity: 1,
-    scale: 1,
-    transition: {
-      duration: 1,
-    },
-  },
-  exit: (back: boolean) => ({
-    x: back ? 500 : -500,
-    opacity: 0,
-    scale: 0,
-    transition: {
-      duration: 1,
-    },
-  }),
-};
+const Circle = styled(motion.div)`
+  background-color: #00a5ff;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+`;
 
 const App = () => {
-  const [visible, setVisible] = useState(1);
-  const [back, setBack] = useState(false);
-  const nextBox = () => {
-    setBack(false);
-    setVisible((prev) => (prev === 10 ? 10 : prev + 1));
-  };
-  const prevBox = () => {
-    setBack(true);
-    setVisible((prev) => (prev === 1 ? 1 : prev - 1));
-  };
+  const [clicked, setClicked] = useState(false);
+  const toggleClicked = () => setClicked((prev) => !prev);
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />
-      <Wrapper>
-        <AnimatePresence custom={back}>
-          <Box
-            custom={back}
-            variants={boxVariants}
-            initial="entry"
-            animate="center"
-            exit="exit"
-            key={visible}
-          >
-            {visible}
-          </Box>
-        </AnimatePresence>
-        <button onClick={nextBox}>next</button>
-        <button onClick={prevBox}>prev</button>
+      <Wrapper onClick={toggleClicked}>
+        <Box
+          style={{
+            justifyContent: clicked ? "center" : "flex-start",
+            alignItems: clicked ? "center" : "flex-start",
+          }}
+        >
+          <Circle layout />
+        </Box>
       </Wrapper>
     </ThemeProvider>
   );
